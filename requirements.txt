@@ -1,4 +1,4 @@
-pip install beautifulsoup4
-pip install python-telegram-bot
-pip install requests
-pip install schedule
+beautifulsoup4==4.13.3
+python-telegram-bot==21.11.1
+requests==2.32.3
+schedule==1.2.2
