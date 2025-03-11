@@ -24,10 +24,8 @@ def get_evn_data():
 
     params = {
         'madvi': 'PB0808',
-        #'tuNgay': current_date.strftime('%d-%m-%Y'),
-        'tuNgay': '02-03-2025',
-        #'denNgay': (current_date + timedelta(days=7)).strftime('%d-%m-%Y'),
-        'denNgay': '10-03-2025',
+        'tuNgay': current_date.strftime('%d-%m-%Y'),        
+        'denNgay': (current_date + timedelta(days=7)).strftime('%d-%m-%Y'),
         'ChucNang': 'MaDonVi'
     }
 
