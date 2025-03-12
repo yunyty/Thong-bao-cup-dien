@@ -1,8 +1,6 @@
 import asyncio
 import requests
 from bs4 import BeautifulSoup
-#import schedule
-#import time
 from telegram import Bot
 from datetime import datetime, timedelta
 import os
@@ -121,15 +119,7 @@ def send_update():
             print(f"Không có lịch cắt điện nào ảnh hưởng đến khu vực {FILTER_KEYWORD}")
 
 
-# Lên lịch gửi cập nhật hàng ngày
-#schedule.every().day.at("08:00").do(send_update)
-
 # Gửi cập nhật ngay khi khởi động
 if __name__ == "__main__":
     print(f"Bot đã khởi động. Đang kiểm tra lịch cắt điện cho khu vực {FILTER_KEYWORD}...")
     send_update()
-
-    #print("Đang chạy lịch trình...")
-    #while True:
-    #    schedule.run_pending()
-    #    time.sleep(60)
