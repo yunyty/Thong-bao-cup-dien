@@ -10,19 +10,19 @@ import os
 TELEGRAM_TOKEN = os.environ["TELEGRAM_TOKEN"]
 CHANNEL_ID = os.environ["TELEGRAM_CH_ID"]
 EVN_URL = 'https://www.cskh.evnspc.vn/TraCuu/GetThongTinLichNgungGiamMaKhachHang'
-FILTER_KEYWORD = 'phú kiết'  # Từ khóa cần lọc, không phân biệt hoa thường
+FILTER_KEYWORDS = ['phú kiết']  # Từ khóa cần lọc, không phân biệt hoa thường
+
 
 # Khởi tạo bot
 bot = Bot(token=TELEGRAM_TOKEN)
 
 
 def get_evn_data():
-    # Lấy ngày hiện tại và ngày sau 7 ngày
     current_date = datetime.now()
 
     params = {
         'madvi': 'PB0808',
-        'tuNgay': current_date.strftime('%d-%m-%Y'),        
+        'tuNgay': current_date.strftime('%d-%m-%Y'),
         'denNgay': (current_date + timedelta(days=7)).strftime('%d-%m-%Y'),
         'ChucNang': 'MaDonVi'
     }
@@ -56,7 +56,7 @@ def parse_html_data(html_content):
         if len(cells) >= 4:
             location = cells[2].text.strip()
             # Chỉ thêm vào danh sách nếu vị trí chứa từ khóa cần lọc (không phân biệt hoa thường)
-            if FILTER_KEYWORD.lower() in location.lower():
+            if any(keyword.lower() in location.lower() for keyword in FILTER_KEYWORDS):
                 outage = {
                     'start_time': cells[0].text.strip(),
                     'end_time': cells[1].text.strip(),
@@ -70,7 +70,7 @@ def parse_html_data(html_content):
 
 def format_message(power_outages):
     if not power_outages or isinstance(power_outages, str):
-        return "Không có lịch cắt điện nào ảnh hưởng đến khu vực Phú Kiết" if not power_outages else power_outages
+        return "Không có lịch cắt điện nào ảnh hưởng đến các khu vực được lọc" if not power_outages else power_outages
 
     # Sắp xếp lịch cắt điện theo thời gian bắt đầu
     try:
@@ -114,12 +114,12 @@ def send_update():
         if "Không có lịch cắt điện nào ảnh hưởng" not in message:
             # Sử dụng asyncio.run để chạy coroutine
             asyncio.run(send_telegram_message(CHANNEL_ID, message))
-            print(f"Đã gửi cập nhật về lịch cắt điện ảnh hưởng đến khu vực {FILTER_KEYWORD}")
+            print(f"Đã gửi cập nhật về lịch cắt điện ảnh hưởng đến các khu vực {', '.join(FILTER_KEYWORDS)}")
         else:
-            print(f"Không có lịch cắt điện nào ảnh hưởng đến khu vực {FILTER_KEYWORD}")
+            print(f"Không có lịch cắt điện nào ảnh hưởng đến các khu vực {', '.join(FILTER_KEYWORDS)}")
 
 
 # Gửi cập nhật ngay khi khởi động
 if __name__ == "__main__":
-    print(f"Bot đã khởi động. Đang kiểm tra lịch cắt điện cho khu vực {FILTER_KEYWORD}...")
+    print(f"Bot đã khởi động. Đang kiểm tra lịch cắt điện cho khu vực {', '.join(FILTER_KEYWORDS)}...")
     send_update()
